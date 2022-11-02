@@ -11,7 +11,6 @@ const CMD_VIEW_DEPARTMENT: &str = "2";
 const CMD_ADD_EMPLOYEE: &str = "3";
 const CMD_QUIT: &str = "q";
 
-
 fn main() {
     let departments: HashMap<String, Department> = HashMap::new();
     let employees: Vec<Employee> = Vec::new();

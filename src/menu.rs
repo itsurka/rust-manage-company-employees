@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::company::{Company, Department, Employee};
 use crate::helper;
 
@@ -71,17 +72,32 @@ pub fn view_department_menu(company: &Company) {
 
 // Show all departments with employees
 pub fn view_departments(company: &Company) {
-    for (_, department) in &company.departments {
-        view_department(&company, &department);
+    // get departments vector and sort it
+    let mut departments_vec: Vec<&Department> = company.departments.values().collect();
+    departments_vec.sort_by(|x, y| x.name.cmp(&y.name));
+
+    // print all departments
+    for department in departments_vec {
+        view_department(company, department);
     }
 }
 
 // Show department name and all employee's names in it
 fn view_department(company: &Company, department: &Department) {
     println!("- {}:", department.name);
-    let employees = company.department_employees.get(helper::to_snake_case(&department.name).as_str()).unwrap();
+    let employees: &HashMap<usize, usize> = company.department_employees.get(helper::to_snake_case(&department.name).as_str()).unwrap();
+
+    // get employee names vector
+    let mut employee_names: Vec<String> = Vec::new();
     for (_, employee_id) in employees {
-        println!("    - {}", company.employees.get(*employee_id).unwrap().name);
+        let employee: &Employee = company.employees.get(employee_id.clone()).unwrap();
+        employee_names.push(employee.name.to_string());
+    }
+
+    // sort names and print
+    employee_names.sort_by(|x, y| x.cmp(y));
+    for employee in employee_names {
+        println!("    - {}", employee);
     }
 }
 
